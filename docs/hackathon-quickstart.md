@@ -37,3 +37,18 @@ APPWRITE_ENDPOINT=https://appwrite.example.com/v1 \
 APPWRITE_PROJECT_ID=your-test-project \
 node bin/hackathon-auth-smoke.mjs
 ```
+
+## Run the fork locally
+
+From the repository root, use Compose v2 with support for `!override`.
+Build the local Appwrite image before starting the services.
+
+```sh
+git submodule update --init
+docker compose -f docker-compose.yml -f dev/compose.hackathon.yaml build
+docker compose -f docker-compose.yml -f dev/compose.hackathon.yaml up -d
+```
+
+Open http://localhost:8080 to set up a disposable project and use
+`http://localhost:8080/v1` as the smoke test endpoint. The override publishes
+only the local HTTP entry point. This development stack is for local testing.

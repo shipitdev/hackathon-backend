@@ -1,0 +1,24 @@
+services:
+  traefik:
+    ports: !override
+      - "127.0.0.1:8080:80"
+  appwrite:
+    ports: !reset []
+  appwrite-realtime:
+    ports: !reset []
+  mariadb:
+    ports: !reset []
+  redis:
+    ports: !reset []
+  maildev:
+    ports: !reset []
+  request-catcher-webhook:
+    ports: !reset []
+  request-catcher-sms:
+    ports: !reset []
+  adminer:
+    ports: !reset []
+  redis-insight:
+    ports: !reset []
+  graphql-explorer:
+    ports: !reset []
