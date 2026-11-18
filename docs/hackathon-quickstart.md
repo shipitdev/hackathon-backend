@@ -24,6 +24,32 @@ export const signOut = () => account.deleteSession({ sessionId: 'current' });
 
 Configure SMTP for email verification and recovery on self-hosted deployments. Register the callback hostname with the project before configuring either flow. Test signup, sign-in, recovery, and sign-out against a disposable project.
 
+### Email verification and password recovery
+
+Register the callback hostname as an Appwrite web platform. Configure the
+callback URLs in your app rather than accepting arbitrary redirect destinations.
+An authenticated user can request verification. Recovery starts with an email
+address and can run before sign-in.
+
+```js
+export const sendVerification = () =>
+  account.createEmailVerification({ url: verificationCallbackUrl });
+
+export const verifyEmail = (userId, secret) =>
+  account.updateEmailVerification({ userId, secret });
+
+export const requestRecovery = (email) =>
+  account.createRecovery({ email, url: recoveryCallbackUrl });
+
+export const finishRecovery = (userId, secret, password) =>
+  account.updateRecovery({ userId, secret, password });
+```
+
+Read `userId` and `secret` from the callback query string and keep them out
+of application logs and analytics. Remove the query string once you have read
+it. On the recovery form, use the same confirmation message whether or not
+the address belongs to a user.
+
 For private data, enable row security on tables and file security on buckets. Grant creation to authenticated users as needed and use owner permissions for reads, updates, and deletes. Verify the setup with two ordinary users and check that each can access only their own rows and files.
 
 ## Verify the session flow
