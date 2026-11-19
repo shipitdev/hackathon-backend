@@ -78,3 +78,35 @@ docker compose -f docker-compose.yml -f dev/compose.hackathon.yaml up -d
 Open http://localhost:8080 to set up a disposable project and use
 `http://localhost:8080/v1` as the smoke test endpoint. The override publishes
 only the local HTTP entry point. This development stack is for local testing.
+
+## Add OAuth and MFA
+
+Enable your OAuth provider in the project console. Register the callback URL
+shown there with the provider and keep its client secret in Appwrite. Pass
+fixed app URLs for the success and failure redirects.
+
+```js
+import { OAuthProvider } from 'appwrite';
+
+export const signInWithGitHub = () =>
+  account.createOAuth2Session({
+    provider: OAuthProvider.Github,
+    success: oauthSuccessUrl,
+    failure: oauthFailureUrl,
+  });
+```
+
+Call `account.get()` on return to confirm the session. For accounts with MFA,
+keep the user's session pending until Appwrite accepts a challenge. Offer
+only factors returned by `account.listMFAFactors()` and pass the selected
+factor to the challenge endpoint.
+
+```js
+export const beginMfa = (factor) => account.createMFAChallenge({ factor });
+
+export const finishMfa = (challengeId, otp) =>
+  account.updateMFAChallenge({ challengeId, otp });
+```
+
+Use the challenge response's `$id` as `challengeId`. Keep authenticator codes
+and recovery codes out of logs.
