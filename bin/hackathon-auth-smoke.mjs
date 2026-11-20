@@ -4,6 +4,8 @@ import { randomBytes, randomUUID } from 'node:crypto';
 const { APPWRITE_ENDPOINT, APPWRITE_PROJECT_ID } = process.env;
 assert(APPWRITE_ENDPOINT && APPWRITE_PROJECT_ID, 'Set APPWRITE_ENDPOINT and APPWRITE_PROJECT_ID for a disposable project.');
 const endpoint = new URL(APPWRITE_ENDPOINT);
+assert(!endpoint.username && !endpoint.password && !endpoint.search && !endpoint.hash,
+  'Use an endpoint URL without credentials, a query string, or a fragment.');
 assert(endpoint.protocol === 'https:' || (
   endpoint.protocol === 'http:' && ['localhost', '127.0.0.1', '[::1]'].includes(endpoint.hostname)
 ), 'Use HTTPS or a loopback HTTP endpoint.');
