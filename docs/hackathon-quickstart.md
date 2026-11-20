@@ -52,6 +52,42 @@ the address belongs to a user.
 
 For private data, enable row security on tables and file security on buckets. Grant creation to authenticated users as needed and use owner permissions for reads, updates, and deletes. Verify the setup with two ordinary users and check that each can access only their own rows and files.
 
+## Store private data and files
+
+Create a table with a string column named `text` and enable row security.
+Enable file security on your storage bucket. Grant signed-in users Create at
+the table and bucket levels. Leave Read, Update, and Delete ungranted at those
+levels so the record and file permissions control access.
+
+```js
+import { Permission, Role, Storage, TablesDB } from 'appwrite';
+
+const tables = new TablesDB(client);
+const storage = new Storage(client);
+
+async function ownerPermissions() {
+  const { $id } = await account.get();
+  const owner = Role.user($id);
+  return [Permission.read(owner), Permission.update(owner), Permission.delete(owner)];
+}
+
+export const saveNote = async (text) =>
+  tables.createRow({
+    databaseId, tableId, rowId: ID.unique(), data: { text },
+    permissions: await ownerPermissions(),
+  });
+
+export const uploadPrivateFile = async (file) =>
+  storage.createFile({
+    bucketId, fileId: ID.unique(), file,
+    permissions: await ownerPermissions(),
+  });
+```
+
+With two test accounts, create a row and file under the first account.
+Keep their IDs and try to read them after signing in as the second account.
+The second account must be denied even when it knows both IDs.
+
 ## Verify the session flow
 
 Use Node.js 22 or later and a disposable project with email/password auth enabled.
