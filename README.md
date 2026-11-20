@@ -152,6 +152,8 @@ Choose from one of the providers below:
 
 ## Getting Started
 
+For this fork’s local setup and app integration examples, see the [hackathon backend quickstart](docs/hackathon-quickstart.md).
+
 Getting started with Appwrite is as easy as creating a new project, choosing your platform, and integrating its SDK into your code. You can easily get started with your platform of choice by reading one of our Getting Started tutorials.
 
 | Platform              | Technology                                                                         |
